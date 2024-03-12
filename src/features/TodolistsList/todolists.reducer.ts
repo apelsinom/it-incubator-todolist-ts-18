@@ -42,13 +42,13 @@ const slice = createSlice({
       return action.payload.todolists.map((tl) => ({ ...tl, filter: "all", entityStatus: "idle" }))
       // return action.payload.forEach(t => ({...t, filter: 'active', entityStatus: 'idle'}))
     },
-    clearTodolists: () => {
+    /*    clearTodolists: () => {
       return []
-    },
+    },*/
   },
   extraReducers: (builder) => {
-    builder.addCase(clearTasksAndTodolists, () => {
-      return []
+    builder.addCase(clearTasksAndTodolists, (state, action) => {
+      return action.payload.todolists
     })
   },
 })

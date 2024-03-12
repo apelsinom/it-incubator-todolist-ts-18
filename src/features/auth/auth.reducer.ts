@@ -4,8 +4,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { AppThunk } from "app/store"
 import { appActions } from "app/app.reducer"
 import { clearTasksAndTodolists } from "common/actions/common.actions"
-import { todolistsActions } from "../TodolistsList/todolists.reducer"
-import { tasksActions } from "../TodolistsList/tasks.reducer"
 
 const slice = createSlice({
   name: "auth",
@@ -33,8 +31,8 @@ export const loginTC =
         if (res.data.resultCode === 0) {
           dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }))
           dispatch(appActions.setAppStatus({ status: "succeeded" }))
-          dispatch(todolistsActions.clearTodolists())
-          dispatch(tasksActions.clearTasks())
+          /*          dispatch(todolistsActions.clearTodolists())
+          dispatch(tasksActions.clearTasks())*/
         } else {
           handleServerAppError(res.data, dispatch)
         }
@@ -51,7 +49,7 @@ export const logoutTC = (): AppThunk => (dispatch) => {
     .then((res) => {
       if (res.data.resultCode === 0) {
         dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }))
-        dispatch(clearTasksAndTodolists())
+        dispatch(clearTasksAndTodolists({ todolists: [], tasks: {} }))
         dispatch(appActions.setAppStatus({ status: "succeeded" }))
       } else {
         handleServerAppError(res.data, dispatch)
