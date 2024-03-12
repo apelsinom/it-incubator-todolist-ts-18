@@ -31,8 +31,6 @@ export const loginTC =
         if (res.data.resultCode === 0) {
           dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }))
           dispatch(appActions.setAppStatus({ status: "succeeded" }))
-          /*          dispatch(todolistsActions.clearTodolists())
-          dispatch(tasksActions.clearTasks())*/
         } else {
           handleServerAppError(res.data, dispatch)
         }
@@ -49,7 +47,7 @@ export const logoutTC = (): AppThunk => (dispatch) => {
     .then((res) => {
       if (res.data.resultCode === 0) {
         dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }))
-        dispatch(clearTasksAndTodolists({ todolists: [], tasks: {} }))
+        dispatch(clearTasksAndTodolists())
         dispatch(appActions.setAppStatus({ status: "succeeded" }))
       } else {
         handleServerAppError(res.data, dispatch)
