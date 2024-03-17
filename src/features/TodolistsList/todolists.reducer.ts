@@ -17,10 +17,10 @@ const slice = createSlice({
       if (index !== -1) state.splice(index, 1)
       // return state.filter(tl => tl.id !== action.payload.id)
     },*/
-    addTodolist: (state, action: PayloadAction<{ todolist: TodolistType }>) => {
+    /*    addTodolist: (state, action: PayloadAction<{ todolist: TodolistType }>) => {
       const newTodolist: TodolistDomainType = { ...action.payload.todolist, filter: "all", entityStatus: "idle" }
       state.unshift(newTodolist)
-    },
+    },*/
     changeTodolistTitle: (state, action: PayloadAction<{ id: string; title: string }>) => {
       const todo = state.find((todo) => todo.id === action.payload.id)
       if (todo) {
@@ -55,6 +55,10 @@ const slice = createSlice({
       .addCase(removeTodolist.fulfilled, (state, action) => {
         const index = state.findIndex((todo) => todo.id === action.payload.id)
         if (index !== -1) state.splice(index, 1)
+      })
+      .addCase(addTodolist.fulfilled, (state, action) => {
+        const newTodolist: TodolistDomainType = { ...action.payload.todolist, filter: "all", entityStatus: "idle" }
+        state.unshift(newTodolist)
       })
       .addCase(clearTasksAndTodolists, () => {
         return []
@@ -124,7 +128,28 @@ const removeTodolist = createAppAsyncThunk<{ id: string }, string>(
     })
   }
 }*/
-export const addTodolistTC = (title: string): AppThunk => {
+const addTodolist = createAppAsyncThunk<{ todolist: TodolistType }, string>(
+  `${slice.name}/addTodolist`,
+  async (arg, thunkAPI) => {
+    const { dispatch, rejectWithValue } = thunkAPI
+    try {
+      dispatch(appActions.setAppStatus({ status: "loading" }))
+      const res = await todolistsAPI.createTodolist(arg)
+      if (res.data.resultCode === 0) {
+        const todolist = res.data.data.item
+        dispatch(appActions.setAppStatus({ status: "succeeded" }))
+        return { todolist }
+      } else {
+        handleServerAppError(res.data, dispatch)
+        return rejectWithValue(null)
+      }
+    } catch (e) {
+      handleServerNetworkError(e, dispatch)
+      return rejectWithValue(null)
+    }
+  },
+)
+/*export const addTodolistTC = (title: string): AppThunk => {
   return (dispatch) => {
     dispatch(appActions.setAppStatus({ status: "loading" }))
     todolistsAPI.createTodolist(title).then((res) => {
@@ -132,7 +157,7 @@ export const addTodolistTC = (title: string): AppThunk => {
       dispatch(appActions.setAppStatus({ status: "succeeded" }))
     })
   }
-}
+}*/
 export const changeTodolistTitleTC = (id: string, title: string): AppThunk => {
   return (dispatch) => {
     todolistsAPI.updateTodolist(id, title).then((res) => {
@@ -149,4 +174,4 @@ export type TodolistDomainType = TodolistType & {
 }
 export const todolistsReducer = slice.reducer
 export const todolistsActions = slice.actions
-export const todosThanks = { fetchTodolists, removeTodolist }
+export const todosThanks = { fetchTodolists, removeTodolist, addTodolist }
