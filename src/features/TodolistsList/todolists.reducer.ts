@@ -4,6 +4,7 @@ import { handleServerAppError, handleServerNetworkError } from "utils/error-util
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { clearTasksAndTodolists } from "common/actions/common.actions"
 import { createAppAsyncThunk } from "../../utils/createAppAsyncThunk"
+import { ResultCode } from "../../common/enams/common.enams"
 
 const initialState: TodolistDomainType[] = []
 
@@ -107,7 +108,7 @@ const removeTodolist = createAppAsyncThunk<{ id: string }, string>(
     try {
       dispatch(appActions.setAppStatus({ status: "loading" }))
       const res = await todolistsAPI.deleteTodolist(id)
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCode.Success) {
         dispatch(appActions.setAppStatus({ status: "succeeded" }))
         return { id }
       } else {
@@ -140,7 +141,7 @@ const addTodolist = createAppAsyncThunk<{ todolist: TodolistType }, string>(
     try {
       dispatch(appActions.setAppStatus({ status: "loading" }))
       const res = await todolistsAPI.createTodolist(arg)
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCode.Success) {
         const todolist = res.data.data.item
         dispatch(appActions.setAppStatus({ status: "succeeded" }))
         return { todolist }
@@ -170,7 +171,7 @@ const changeTodolistTitle = createAppAsyncThunk<UpdateTodolistTitleArgType, Upda
     try {
       dispatch(appActions.setAppStatus({ status: "loading" }))
       const res = await todolistsAPI.updateTodolist(arg)
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCode.Success) {
         dispatch(appActions.setAppStatus({ status: "succeeded" }))
         return arg
       } else {
