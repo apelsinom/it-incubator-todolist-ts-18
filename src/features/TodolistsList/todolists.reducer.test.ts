@@ -53,7 +53,9 @@ test("correct todolist should be added", () => {
 test("correct todolist should change its name", () => {
   let newTodolistTitle = "New Todolist"
 
-  const action = todolistsActions.changeTodolistTitle({ id: todolistId2, title: newTodolistTitle })
+  const args = { id: todolistId2, title: newTodolistTitle }
+
+  const action = todosThanks.changeTodolistTitle.fulfilled(args, "requestId", args)
 
   const endState = todolistsReducer(startState, action)
 

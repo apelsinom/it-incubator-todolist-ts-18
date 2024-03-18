@@ -23,8 +23,8 @@ export const todolistsAPI = {
   deleteTodolist(id: string) {
     return instance.delete<ResponseType>(`todo-lists/${id}`)
   },
-  updateTodolist(id: string, title: string) {
-    return instance.put<ResponseType>(`todo-lists/${id}`, { title: title })
+  updateTodolist(arg: UpdateTodolistTitleArgType) {
+    return instance.put<ResponseType>(`todo-lists/${arg.id}`, { title: arg.title })
   },
   getTasks(todolistId: string) {
     return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
@@ -58,7 +58,10 @@ export type LoginParamsType = {
   rememberMe: boolean
   captcha?: string
 }
-
+export type UpdateTodolistTitleArgType = {
+  id: string
+  title: string
+}
 export const authAPI = {
   login(data: LoginParamsType) {
     return instance.post<ResponseType<{ userId?: number }>>("auth/login", data)
