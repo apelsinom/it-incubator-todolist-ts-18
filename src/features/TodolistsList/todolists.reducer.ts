@@ -1,10 +1,9 @@
 import { todolistsAPI, TodolistType, UpdateTodolistTitleArgType } from "api/todolists-api"
 import { appActions, RequestStatusType } from "app/app.reducer"
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "utils"
+import { ResultCode } from "common/enams/common.enams"
 import { clearTasksAndTodolists } from "common/actions/common.actions"
-import { createAppAsyncThunk } from "../../utils/createAppAsyncThunk"
-import { ResultCode } from "../../common/enams/common.enams"
 
 const initialState: TodolistDomainType[] = []
 
